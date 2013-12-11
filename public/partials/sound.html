@@ -1,0 +1,103 @@
+<div modal="showDialog" close="close()" options="{
+    backdrop: true,
+    keyboard: false,
+    backdropClick: false
+  }">
+        <div class="modal-header">
+            <h4>Add Node</h4>
+        </div>
+        <div class="modal-body" style="height:216px">
+            <input id="addNode" type="text" ng-model="nodeType" typeahead="name for name in nodeTypes | filter:$viewValue | limitTo:6">
+        </div>
+        <div class="modal-footer">
+            <!--<button class="btn btn-warning cancel" ng-click="close()">Cancel</button>-->
+        </div>
+    </div>
+<div modal="showLoad" close="close()" options="{
+    backdrop: true,
+    keyboard: false,
+    backdropClick: false
+  }">
+        <div class="modal-header">
+            <h4>Load Session</h4>
+        </div>
+        <div class="modal-body" style="height:216px">
+            <input id="loadName" type="text" ng-model="loadName" typeahead="name for name in saves | filter:$viewValue | limitTo:6">
+        </div>
+        <div class="modal-footer">
+            <!--<button class="btn btn-warning cancel" ng-click="close()">Cancel</button>-->
+        </div>
+    </div>
+<div modal="showSave" close="close()" options="{
+    backdrop: true,
+    keyboard: false,
+    backdropClick: false
+  }">
+        <div class="modal-header">
+            <h4>Save Session</h4>
+        </div>
+        <div class="modal-body" style="height:216px">
+            <input id="saveName" type="text" ng-model="saveName">
+            <i>existing files</i>
+            <ul>
+                <li ng-repeat="name in saves"><button ng-click="$parent.saveName=name">{{name}}</button></li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="save()">Save</button>
+            <button class="btn btn-warning cancel" ng-click="window.showSave=false">Cancel</button>
+        </div>
+    </div>
+<div id="stageContainer">
+
+    <div ng-class="{hidden:node.hidden,minimized:node.minimized}" ng-repeat="(nodename,node) in nodes" id="{{nodename}}" class="window {{node.type}}" style="position:absolute;" draggable>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <button ng-click="removeNode(nodename)">X</button></th>
+                <th>{{node.title}}</th>
+                <th>
+                    <button ng-click="node.minimized=!node.minimized;refreshLines();">-</button>
+                </th>
+            </tr>
+            </thead>
+            <tbody ng-class="{minimized:node.minimized}">
+            <tr>
+                <td>
+                    <div class="input" data-type="{{input.type}}" data-selector="{{nodename}}-input-{{$index}}{{node.hidden}}" ng-repeat="input in node.inputs"  ng-dblclick="removeLink('input',[nodename,$index])" ng-click="addLink('input',[nodename,$index],input.type)" ng-class="{valid:isValid('input',[nodename,$index],input.type),start:isStart('input',[nodename,$index])}">
+                        {{input.title}}
+                    </div>
+                </td>
+                <td>
+                    <div class="control" ng-repeat="(name,control) in node.controls" ng-switch="control.type">
+                        <input type="range" ng-model="node.settings[name]" step="{{control.step}}" min="{{control.min}}" max="{{control.max}}" ng-switch-when="range"/>
+                        <input type="text" ng-model="node.settings[name]" ng-switch-when="text"/>
+                        <span ng-switch-when="label">{{node.settings[name]| number:2}}</span>
+                        <input file type="file" ng-switch-when="file" on-load="node.controller.onFileLoad(data)"/>
+                        <button ng-switch-when="button" ng-click="node.controller.onClick(name)">{{control.label}}</button>
+                        <canvas ng-switch-when="canvas" width="{{control.width}}" height="{{control.height}}"></canvas>
+                        <ng-include src="'partials/piano.html'" ng-switch-when="piano"></ng-include>
+                    </div>
+                </td>
+                <td>
+                    <div  class="output" data-type="{{output.type}}" type="{{output.type}}" data-selector="{{nodename}}-output-{{$index}}{{node.hidden}}" ng-repeat="output in node.outputs" ng-dblclick="removeLink('output',[nodename,$index])" ng-click="addLink('output',[nodename,$index],output.type)" ng-class="{valid:isValid('output',[nodename,$index],output.type),start:isStart('output',[nodename,$index])}">
+                        {{output.title}}
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="destination">
+        <div class="input" data-selector="destination-input-0" ng-dblclick="removeLink('input',['destination',0])" ng-click="addLink('input',['destination',0],'node')" ng-class="{valid:isValid('input',['destination',0],'node'),start:isStart('input',['destination',0])}">L</div>
+        <div class="input" data-selector="destination-input-1" ng-dblclick="removeLink('input',['destination',1])" ng-click="addLink('input',['destination',1],'node')" ng-class="{valid:isValid('input',['destination',1],'node'),start:isStart('input',['destination',1])}">R</div>
+    </div>
+</div>
+<canvas id="stage"></canvas>
+<div id="stage2"></div>
+<div id="controls">
+    <!--<select ng-model="selectedNodeType" ng-options="name for name in nodeTypes"></select>
+    <button ng-click="addNode()">Hinzufügen</button>-->
+    Press <code>SPACE</code> to add a new Node,<code>S</code> to Save and <code>L</code> to load a Session
+</div>
