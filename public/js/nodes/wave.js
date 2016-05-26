@@ -18,7 +18,7 @@ nodeLoader.registerNode(
                 var Out = this.context.createOscillator();
                 Out.type = "sine";
                 Out.frequency.value = 40;
-                Out.noteOn(0);
+                Out.start(0);
                 this.nodes.Out = Out;
             },
             onInputChange: function (setting, value) {
@@ -57,7 +57,7 @@ nodeLoader.registerNode(
                 var Out = this.context.createOscillator();
                 Out.type = "square";
                 Out.frequency.value = 40;
-                Out.noteOn(0);
+                Out.start(0);
                 this.nodes.Out = Out;
             },
             onInputChange: function (setting, value) {
@@ -96,7 +96,7 @@ nodeLoader.registerNode(
                 var Out = this.context.createOscillator();
                 Out.type = "sawtooth"    ;
                 Out.frequency.value = 40;
-                Out.noteOn(0);
+                Out.start(0);
                 this.nodes.Out = Out;
             },
             onInputChange: function (setting, value) {
@@ -135,7 +135,7 @@ nodeLoader.registerNode(
                 var Out = this.context.createOscillator();
                 Out.type = "triangle";
                 Out.frequency.value = 40;
-                Out.noteOn(0);
+                Out.start(0);
                 this.nodes.Out = Out;
             },
             onInputChange: function (setting, value) {

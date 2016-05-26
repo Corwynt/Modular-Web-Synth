@@ -28,7 +28,7 @@ nodeLoader.registerNode("Audio", {
             var that = this;
             this.parent.context.decodeAudioData(data, function (buffer) {
                 that.parent.nodes.out.buffer = buffer;
-                that.parent.nodes.out.noteOn(0);
+                that.parent.nodes.out.start(0);
             }, function (e) {
                 console.log('Error decoding file', e);
             });
@@ -88,7 +88,7 @@ nodeLoader.registerNode("AudioUrl", {
                 context.decodeAudioData(arrayBuffer, function (buffer) {
                     // audioBuffer is global to reuse the decoded audio later.
                     that.parent.nodes.out.buffer = buffer;
-                    that.parent.nodes.out.noteOn(0);
+                    that.parent.nodes.out.start(0);
                 }, function (e) {
                     console.log('Error decoding file', e);
                 });

@@ -20,7 +20,7 @@ var NodeHandler = function ($scope, $interval) {
     }
 
     var beatINT = null;
-    var context = new webkitAudioContext();
+    var context = new AudioContext();
     var moduleTypes = nodeLoader.getNodes();
     var nodeLinks = [];
     var destination = {
