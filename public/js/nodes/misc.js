@@ -95,7 +95,7 @@ nodeLoader.registerNode("MergeChannels", {
     controller: {
         init: function () {
             var Out = this.context.createGain();
-            Out.gain=0.1;
+            Out.gain = 0.1;
             this.nodes.out = Out;
 
 
@@ -120,6 +120,7 @@ nodeLoader.registerNode("MergeChannels", {
 });
 nodeLoader.registerNode("Analyser", {
     "title": "Analyser",
+    type: "analyzer",
     "controls": {
         canvas: {
             type: "canvas",
@@ -245,6 +246,7 @@ window.requestAnimationFrame = (function () {
 })();
 nodeLoader.registerNode("SpectrumAnalyser", {
     "title": "SpectrumAnalyser",
+    type: "analyzer",
     "controls": {
         canvas: {
             type: "canvas",
@@ -284,7 +286,7 @@ nodeLoader.registerNode("SpectrumAnalyser", {
                         ctx.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
                         ctx.fillRect(i * barWidth, offset, barWidth, height);
                     }
-                    (function (analyser,drawContext) {
+                    (function (analyser, drawContext) {
                         var timeDomain = new Uint8Array(analyser.frequencyBinCount);
                         analyser.getByteTimeDomainData(timeDomain);
                         for (var i = 0; i < analyser.frequencyBinCount; i++) {
@@ -296,7 +298,7 @@ nodeLoader.registerNode("SpectrumAnalyser", {
                             drawContext.fillStyle = 'black';
                             drawContext.fillRect(i * barWidth, offset, 1, 1);
                         }
-                    })(Out,ctx);
+                    })(Out, ctx);
                 }
             }, 50);
         },
@@ -320,149 +322,148 @@ nodeLoader.registerNode("SpectrumAnalyser", {
         {type: "node", title: "Out", nodeName: "out"}
     ]
 });
-nodeLoader.registerNode("DoubleAnalyser",
-    {
-        "title": "DoubleAnalyser",
-        "controls": {
-            canvas: {
-                type: "canvas",
-                width: 300,
-                height: 100
-            }
-        },
-        settings: {
-        },
-        nodes: {
-            "out1": null,
-            "out2": null
-        },
-        controller: {
-            init: function () {
-                function paintWave(data1, data2) {
-                    var canvas = $("#" + that.id + " canvas").get(0);
-                    var ctx = canvas.getContext("2d");
-                    //data = findPhase(data, 20);
-                    /*data1 = data1.subarray(0, data1.length / 8);
-                     data2 = data2.subarray(0, data2.length / 8);*/
-                    var length = data1.length;
+nodeLoader.registerNode("DoubleAnalyser", {
+    type: "analyzer",
+    "title": "DoubleAnalyser",
+    "controls": {
+        canvas: {
+            type: "canvas",
+            width: 300,
+            height: 100
+        }
+    },
+    settings: {
+    },
+    nodes: {
+        "out1": null,
+        "out2": null
+    },
+    controller: {
+        init: function () {
+            function paintWave(data1, data2) {
+                var canvas = $("#" + that.id + " canvas").get(0);
+                var ctx = canvas.getContext("2d");
+                //data = findPhase(data, 20);
+                /*data1 = data1.subarray(0, data1.length / 8);
+                 data2 = data2.subarray(0, data2.length / 8);*/
+                var length = data1.length;
 
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    var step = canvas.width / length;
-                    var min1 = Math.min.apply(null, data1),
-                        max1 = Math.max.apply(null, data1);
-                    var min2 = Math.min.apply(null, data2),
-                        max2 = Math.max.apply(null, data2);
-                    var min = Math.min(min1, min2);
-                    var max = Math.max(max1, max2);
-                    var maxPaintHeight = Math.max(Math.abs(min), Math.abs(max));
-                    var yScale = (canvas.height - 20) / maxPaintHeight / 2;
-                    ctx.strokeStyle = 'green';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(0, 10 + (canvas.height - 20) / 2 + (data1[0] * yScale));
-                    for (var i = 1, x = step; i < length; i++, x += step) {
-                        ctx.lineTo(x, 10 + (canvas.height - 20) / 2 + (data1[i] * yScale));
-                    }
-                    ctx.stroke();
-                    ctx.strokeStyle = 'red';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(0, 10 + (canvas.height - 20) / 2 + (data2[0] * yScale));
-                    for (var i = 1, x = step; i < length; i++, x += step) {
-                        ctx.lineTo(x, 10 + (canvas.height - 20) / 2 + (data2[i] * yScale));
-                    }
-                    ctx.stroke();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                var step = canvas.width / length;
+                var min1 = Math.min.apply(null, data1),
+                    max1 = Math.max.apply(null, data1);
+                var min2 = Math.min.apply(null, data2),
+                    max2 = Math.max.apply(null, data2);
+                var min = Math.min(min1, min2);
+                var max = Math.max(max1, max2);
+                var maxPaintHeight = Math.max(Math.abs(min), Math.abs(max));
+                var yScale = (canvas.height - 20) / maxPaintHeight / 2;
+                ctx.strokeStyle = 'green';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(0, 10 + (canvas.height - 20) / 2 + (data1[0] * yScale));
+                for (var i = 1, x = step; i < length; i++, x += step) {
+                    ctx.lineTo(x, 10 + (canvas.height - 20) / 2 + (data1[i] * yScale));
                 }
-
-                var Out1 = this.context.createAnalyser();
-                Out1.smoothingTimeConstant = 0.0;
-                Out1.fftSize = 2048;
-                this.nodes.out1 = Out1;
-                var Out2 = this.context.createAnalyser();
-                Out2.smoothingTimeConstant = 0.0;
-                Out2.fftSize = 2048;
-                this.nodes.out2 = Out2;
-                var that = this;
-                this.$interval(function () {
-                    var data1 = new Uint8Array(Out1.frequencyBinCount);
-                    var data2 = new Uint8Array(Out2.frequencyBinCount);
-                    Out1.getByteTimeDomainData(data1);
-                    Out2.getByteTimeDomainData(data2);
-
-                    paintWave(data1, data2);
-                }, 50);
-            },
-            onInputChange: function (setting, value) {
-
-            },
-            onConnect: function (target, node) {
-                node.connect(this.nodes[target]);
-                //this.settings.connected = true;
-
-            },
-            onDisconnect: function (target, node) {
-                node.disconnect(this.nodes[target]);
-                //this.settings.connected = false;
+                ctx.stroke();
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(0, 10 + (canvas.height - 20) / 2 + (data2[0] * yScale));
+                for (var i = 1, x = step; i < length; i++, x += step) {
+                    ctx.lineTo(x, 10 + (canvas.height - 20) / 2 + (data2[i] * yScale));
+                }
+                ctx.stroke();
             }
+
+            var Out1 = this.context.createAnalyser();
+            Out1.smoothingTimeConstant = 0.0;
+            Out1.fftSize = 2048;
+            this.nodes.out1 = Out1;
+            var Out2 = this.context.createAnalyser();
+            Out2.smoothingTimeConstant = 0.0;
+            Out2.fftSize = 2048;
+            this.nodes.out2 = Out2;
+            var that = this;
+            this.$interval(function () {
+                var data1 = new Uint8Array(Out1.frequencyBinCount);
+                var data2 = new Uint8Array(Out2.frequencyBinCount);
+                Out1.getByteTimeDomainData(data1);
+                Out2.getByteTimeDomainData(data2);
+
+                paintWave(data1, data2);
+            }, 50);
         },
-        inputs: [
-            {type: "node", title: "In1", nodeName: "out1"},
-            {type: "node", title: "In2", nodeName: "out2"}
-        ],
-        outputs: [
-            {type: "node", title: "Out1", nodeName: "out1"},
-            {type: "node", title: "Out2", nodeName: "out2"}
-        ]
-    });
-nodeLoader.registerNode("NodeToValue",
-    {
-        "title": "NodeToValue",
-        "controls": {
+        onInputChange: function (setting, value) {
 
         },
-        settings: {
-            connected: false
-        },
-        nodes: {
-            "out": null
-        },
-        controller: {
-            init: function () {
-                var Out = this.context.createAnalyser();
-                Out.smoothingTimeConstant = 0.0;
-                Out.fftSize = 2048;
-                this.nodes.out = Out;
-                var that = this;
-                this.$interval(function () {
-                    if (that.settings.connected) {
-                        //var data = new Float32Array(1);
-                        var data = new Uint8Array(1);
-                        //Out.getFloatFrequencyData(data);
-                        Out.getByteTimeDomainData(data);
-                        that.settings.out = data[0];
-                    }
-                }, 50);
-            },
-            onInputChange: function (setting, value) {
+        onConnect: function (target, node) {
+            node.connect(this.nodes[target]);
+            //this.settings.connected = true;
 
-            },
-            onConnect: function (target, node) {
-                node.connect(this.nodes[target]);
-                this.settings.connected = true;
-
-            },
-            onDisconnect: function (target, node) {
-                node.disconnect(this.nodes[target]);
-                this.settings.connected = false;
-            }
         },
-        inputs: [
-            {type: "node", title: "In", nodeName: "out"}
-        ],
-        outputs: [
-            {type: "value", title: "Out", setting: "out"}
-        ]
-    });
+        onDisconnect: function (target, node) {
+            node.disconnect(this.nodes[target]);
+            //this.settings.connected = false;
+        }
+    },
+    inputs: [
+        {type: "node", title: "In1", nodeName: "out1"},
+        {type: "node", title: "In2", nodeName: "out2"}
+    ],
+    outputs: [
+        {type: "node", title: "Out1", nodeName: "out1"},
+        {type: "node", title: "Out2", nodeName: "out2"}
+    ]
+});
+nodeLoader.registerNode("NodeToValue", {
+    "title": "NodeToValue",
+    "controls": {
+
+    },
+    settings: {
+        connected: false
+    },
+    nodes: {
+        "out": null
+    },
+    controller: {
+        init: function () {
+            var Out = this.context.createAnalyser();
+            Out.smoothingTimeConstant = 0.0;
+            Out.fftSize = 2048;
+            this.nodes.out = Out;
+            var that = this;
+            this.$interval(function () {
+                if (that.settings.connected) {
+                    //var data = new Float32Array(1);
+                    var data = new Uint8Array(1);
+                    //Out.getFloatFrequencyData(data);
+                    Out.getByteTimeDomainData(data);
+                    that.settings.out = data[0];
+                }
+            }, 50);
+        },
+        onInputChange: function (setting, value) {
+
+        },
+        onConnect: function (target, node) {
+            node.connect(this.nodes[target]);
+            this.settings.connected = true;
+
+        },
+        onDisconnect: function (target, node) {
+            node.disconnect(this.nodes[target]);
+            this.settings.connected = false;
+        }
+    },
+    inputs: [
+        {type: "node", title: "In", nodeName: "out"}
+    ],
+    outputs: [
+        {type: "value", title: "Out", setting: "out"}
+    ]
+});
 nodeLoader.registerNode("Fader", {
     "title": "Fader",
     "controls": {

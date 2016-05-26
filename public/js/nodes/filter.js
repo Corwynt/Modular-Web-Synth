@@ -5,6 +5,7 @@
                 type: "label"
             }
         },
+        type:"filter",
         settings: {
             freq: 1,
             type: 0

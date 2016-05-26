@@ -7,6 +7,7 @@ nodeLoader.registerNode("Piano", {
     },
     settings: {
         press: 0,
+        key: 0,
         freq: 0
     },
     controller: {
@@ -25,6 +26,9 @@ nodeLoader.registerNode("Piano", {
         onInputChange: function (setting, value) {
 
         },
+        onSettingChange: function (setting, value) {
+            if(setting=="key")this.settings.freq = (440 * Math.pow(2, (value) / 12));
+        },
         onConnect: function (target, node) {
 
         },
@@ -35,6 +39,7 @@ nodeLoader.registerNode("Piano", {
     inputs: [
     ],
     outputs: [
+        {type: "value", title: "Key", setting: "key"},
         {type: "value", title: "Freq", setting: "freq"},
         {type: "value", title: "Press", setting: "press"}
     ]

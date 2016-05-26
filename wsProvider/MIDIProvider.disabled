@@ -1,3 +1,4 @@
+//Disabled due to incompatible npm midi module
 var midi=require("midi");
 exports.run = function () {
     return {
@@ -7,7 +8,10 @@ exports.run = function () {
             port = parseInt(port);
             this.input = new midi.input();
             this.output = new midi.output();
-            console.log(this.input.getPortCount());
+            for(var i=0;i<this.input.getPortCount();i++){
+                console.log(this.input.getPortName(i));
+            }
+            console.log("Port",port);
             if (this.input.getPortCount() >= port) {
                 var that = this;
                 this.input.on('message', function (deltaTime, message) {

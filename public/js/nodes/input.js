@@ -1,6 +1,6 @@
 nodeLoader.registerNode("Audio", {
     "title": "Audio",
-    "type": "input",
+    "type": "input-type",
     "controls": {
         "file": {
             type: "file"
@@ -49,7 +49,7 @@ nodeLoader.registerNode("Audio", {
 });
 nodeLoader.registerNode("AudioUrl", {
     "title": "AudioUrl",
-    "type": "input",
+    "type": "input-type",
     "controls": {
         "url": {
             type: "text"
@@ -118,6 +118,7 @@ nodeLoader.registerNode("AudioUrl", {
 });
 nodeLoader.registerNode("Microphone", {
     "title": "Microphone",
+    "type": "input-type",
     "controls": {
 
     },

@@ -11,6 +11,15 @@ var nodeLoader = (function () {
     };
 })();
 var NodeHandler = function ($scope, $interval) {
+    function BEAT() {
+        for (var name in nodes) {
+            if (nodes.hasOwnProperty(name) && nodes[name].controller.hasOwnProperty("onBeat")) {
+                nodes[name].controller.onBeat.apply(nodes[name]);
+            }
+        }
+    }
+
+    var beatINT = null;
     var context = new webkitAudioContext();
     var moduleTypes = nodeLoader.getNodes();
     var nodeLinks = [];
@@ -69,6 +78,12 @@ var NodeHandler = function ($scope, $interval) {
         getLinks: function () {
             return nodeLinks;
         },
+        setBPM: function (bpm) {
+            if (beatINT != null) {
+                beatINT.stop();
+            }
+            beatINT = $interval(BEAT, 6000 / bpm);
+        },
         getNodes: function () {
             return nodes;
         },
@@ -77,17 +92,23 @@ var NodeHandler = function ($scope, $interval) {
                 var node = angular.copy(moduleTypes[type]);
                 var nodeIdentifier = "node_" + new Date().getTime();
                 if (name != undefined)nodeIdentifier = name;
-                node.type = type;
+                node.types = type;
                 node.id = nodeIdentifier;
                 node.context = context;
                 node.$interval = $interval;
                 node.$scope = $scope;
                 if (node.controller.hasOwnProperty("onSettingChange")) {
                     for (var sname in node.settings) {
-                        if(!node.settings.hasOwnProperty(sname))continue;
-                        $scope.$watch((function(name){return function(){return node.settings[name]}})(sname), (function(name){return function (newVal) {
-                            node.controller.onSettingChange.apply(node, [name, newVal]);
-                        }})(sname));
+                        if (!node.settings.hasOwnProperty(sname))continue;
+                        $scope.$watch((function (name) {
+                            return function () {
+                                return node.settings[name]
+                            }
+                        })(sname), (function (name) {
+                            return function (newVal) {
+                                node.controller.onSettingChange.apply(node, [name, newVal]);
+                            }
+                        })(sname));
                     }
                 }
                 node.outputs.forEach(
@@ -148,7 +169,7 @@ var NodeHandler = function ($scope, $interval) {
                 if (name == "destination")continue;
                 out.nodes[name] = {
                     settings: nodes[name].settings,
-                    type: nodes[name].type,
+                    type: nodes[name].types,
                     minimized: nodes[name].minimized,
                     offset: $("#" + name).offset()
                 };
@@ -187,7 +208,7 @@ var NodeHandler = function ($scope, $interval) {
                 out["#" + name] = data.nodes[name].offset;
 
             }
-            nodeLinks = [];
+            nodeLinks = []
 
             data.links.forEach(function (link) {
                 public.connect(link.start, link.end);

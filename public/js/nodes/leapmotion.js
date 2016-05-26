@@ -1,5 +1,6 @@
 nodeLoader.registerNode("LeapMotion",
     {
+        type:"external",
         "controls": {
             xy: {
                 type: "label"
@@ -60,6 +61,3 @@ nodeLoader.registerNode("LeapMotion",
 
     }
 );
-var filterScaffold = {
-
-};

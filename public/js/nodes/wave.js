@@ -1,6 +1,7 @@
 nodeLoader.registerNode(
     "Sine Wave Generator", {
         "title": "Sine",
+        type:"wave",
         "controls": {
             freq: {
                 type: "label"
@@ -15,7 +16,7 @@ nodeLoader.registerNode(
         controller: {
             init: function () {
                 var Out = this.context.createOscillator();
-                Out.type = 0;
+                Out.type = "sine";
                 Out.frequency.value = 40;
                 Out.noteOn(0);
                 this.nodes.Out = Out;
@@ -39,6 +40,7 @@ nodeLoader.registerNode(
 nodeLoader.registerNode(
     "Square Wave Generator", {
         "title": "Square",
+        type:"wave",
         "controls": {
             freq: {
                 type: "label"
@@ -53,7 +55,7 @@ nodeLoader.registerNode(
         controller: {
             init: function () {
                 var Out = this.context.createOscillator();
-                Out.type = 1;
+                Out.type = "square";
                 Out.frequency.value = 40;
                 Out.noteOn(0);
                 this.nodes.Out = Out;
@@ -77,6 +79,7 @@ nodeLoader.registerNode(
 nodeLoader.registerNode(
     "Saw Wave Generator", {
         "title": "Saw",
+        type:"wave",
         "controls": {
             freq: {
                 type: "label"
@@ -91,7 +94,7 @@ nodeLoader.registerNode(
         controller: {
             init: function () {
                 var Out = this.context.createOscillator();
-                Out.type = 2    ;
+                Out.type = "sawtooth"    ;
                 Out.frequency.value = 40;
                 Out.noteOn(0);
                 this.nodes.Out = Out;
@@ -115,6 +118,7 @@ nodeLoader.registerNode(
 nodeLoader.registerNode(
     "Triangle Wave Generator", {
         "title": "Triangle",
+        type:"wave",
         "controls": {
             freq: {
                 type: "label"
@@ -129,7 +133,7 @@ nodeLoader.registerNode(
         controller: {
             init: function () {
                 var Out = this.context.createOscillator();
-                Out.type = 3;
+                Out.type = "triangle";
                 Out.frequency.value = 40;
                 Out.noteOn(0);
                 this.nodes.Out = Out;

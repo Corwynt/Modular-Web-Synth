@@ -1,5 +1,6 @@
 nodeLoader.registerNode("Midi", {
     "title": "Midi",
+    type:"external",
     "controls": {
 
     },
@@ -12,7 +13,7 @@ nodeLoader.registerNode("Midi", {
     controller: {
         init: function () {
             var that = this;
-            var ws = new WebSocket("ws://localhost:3000/midi/1", ["midi-protocol"]);
+            var ws = new WebSocket("ws://localhost:3000/midi/2", ["midi-protocol"]);
             ws.onopen = function () {
                 console.log("WS OPEN");
             };
@@ -62,6 +63,7 @@ nodeLoader.registerNode("Midi", {
 });
 nodeLoader.registerNode("MidiCC", {
     "title": "MidiCC",
+    type:"external",
     "controls": {
         cc:{
             type:"text"
@@ -78,7 +80,7 @@ nodeLoader.registerNode("MidiCC", {
     controller: {
         init: function () {
             var that = this;
-            var ws = new WebSocket("ws://localhost:3000/midi/1", ["midi-protocol"]);
+            var ws = new WebSocket("ws://localhost:3000/midi/2", ["midi-protocol"]);
             ws.onopen = function () {
                 console.log("WS OPEN");
             };
@@ -114,6 +116,7 @@ nodeLoader.registerNode("MidiCC", {
 });
 nodeLoader.registerNode("Midi to Freq", {
     "title": "Midi to Freq",
+    type:"external",
     "controls": {
 
     },

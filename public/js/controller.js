@@ -59,7 +59,10 @@ function SoundController($scope, $interval, $timeout, $http) {
     $scope.addStart = null;
     $scope.target = "";
     $scope.type = "";
-
+    $scope.bpm = 140;
+    $scope.$watch("bpm",function(bpm){
+        nodeHandlerInstance.setBPM(bpm);
+    });
     $scope.removeLink = function (type, selector) {
         $scope.addStart = null;
         var elem = findLink(type, selector);

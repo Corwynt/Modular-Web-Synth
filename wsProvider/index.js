@@ -116,7 +116,7 @@ function runMaster(server) {
             }
         });
     });
-    require("fs").readdirSync("./wsProvider").forEach(function (file) {
+    require("fs").readdirSync("./wsProvider").filter(function(file){return file.indexOf(".js")!=-1;}).forEach(function (file) {
         if (file == "index.js")return;
         var childProcess = cluster.fork({"ws_module": file});
         providers[childProcess.workerID] = file;
